@@ -187,11 +187,17 @@ contract RockPaperScissor {
     return true;
   }
 
+  function isMoveValid(uint _move) private pure returns(bool) {
+    // Vaid move 0 - Scissor, 1 - Paper, 2 - Rock
+    return ((_move == 0) || (_move == 1) || (_move == 2));
+  }
+
   function revealMove(bytes32 _gameId, string _password,
                       uint _move) public onlyIfRunning
   returns(bool) {
     require(
         isSecretCodeMatched(_gameId, msg.sender, keccak256(_password, _move)));
+    require(isMoveValid(_move));
     GameData storage gameData = gameList[_gameId];
     PlayerData storage playerData = gameData.playerData[msg.sender];
     playerData.move = _move;
